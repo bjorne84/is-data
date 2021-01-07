@@ -1,5 +1,5 @@
 //require("dotenv").config();
-
+const cors = require("cors");
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -18,6 +18,7 @@ mongoose
   .catch((err) => console.log(err));
 
 //BodyParser Middleware, for use of JSON in body
+app.use(cors());
 app.use(express.json());
 
 // skapa statisk sökväg, så den kan komma åt filer i public-katalogen

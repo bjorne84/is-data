@@ -63,6 +63,7 @@ router.patch("/:id", getPost, async (req, res) => {
     } else {
       // It worked ok, post is created
       res.status(201).json(post);
+      console.log(post);
     }
   } catch (err) {
     res.status(400).json({ message: err.message });
