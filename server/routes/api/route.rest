@@ -1,0 +1,30 @@
+
+GET http://localhost:5000/api/posts
+###
+
+
+GET http://localhost:5000/api/posts/5ff70872d0b55d0d28ce303e
+###
+
+
+POST http://localhost:5000/api/posts
+Content-Type: application/json
+
+{
+    "lake":"Lillsjön3", 
+    "text":"Svag is3"
+}
+
+###
+
+DELETE http://localhost:5000/api/posts/5ff6e9a9184da40f18135af1
+
+
+###
+PATCH http://localhost:5000/api/posts/5ff70de892def828444042f1
+Content-Type: application/json
+
+{
+    "lake":"Lillsjön9", 
+    "text":"hejhej9"
+}
