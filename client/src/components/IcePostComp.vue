@@ -36,6 +36,41 @@
         <button type="reset" class="btn del">Radera fält</button>
       </form>
     </div>
+    <div class="formWrapper">
+      <h3 class="h3form">Uppdatera</h3>
+      <form @submit="upDate">
+        <input
+          type="hidden"
+          id="hiddenId"
+          name="hiddenId"
+          value="new"
+          v-model="hiddenId"
+        />
+        <label for="lake">Sjö/vattendrag:</label><br />
+        <input
+          type="text"
+          id="lake"
+          v-model="lake"
+          class="formBorder"
+          name="lake"
+          placeholder="Vilken sjö var du på?"
+          required
+        /><br />
+        <label for="textIn">Beskrivning av läget:</label><br />
+        <textarea
+          id="textIn"
+          v-model="text"
+          name="textIn"
+          class="formBorder"
+          cols="30"
+          rows="8"
+          placeholder="exempelvis hur tjock isen var"
+          required
+        /><br />
+        <button type="submit" class="btn up">Posta!</button>
+        <button type="reset" class="btn del">Radera fält</button>
+      </form>
+    </div>
     <section class="wrapper">
       <h1 class="wrapperh1">Inlägg:</h1>
       <article
@@ -54,7 +89,12 @@
           <button class="btn del" v-on:click="deletePost(post._id)">
             Radera
           </button>
-          <button class="btn up">Updatera</button>
+          <button
+            class="btn up"
+            v-on:click="pressUpdate(post._id, post.lake, post.text)"
+          >
+            Updatera
+          </button>
         </div>
       </article>
     </section>
@@ -73,6 +113,7 @@ export default {
       error: "",
       lake: "",
       text: "",
+      hiddenId: "",
     };
   },
   async created() {
@@ -110,6 +151,32 @@ export default {
       this.posts = await CallApi.getPosts();
       console.log("hej");
     },
+
+    // eslint-disable-next-line no-unused-vars
+    pressUpdate(id, lake, text) {
+      console.log(id + lake + text);
+      this.lake = lake;
+      this.text = text;
+      this.hiddenId = id;
+    },
+    async upDate(e) {
+      e.preventDefault();
+      const newPost = {
+        lake: this.lake,
+        text: this.text,
+      };
+
+      // send up to parent
+      //this.$emit("add-todo", newTodo);
+
+      // clear
+      this.lake = "";
+      this.text = "";
+
+      //Skapar fetch-anrop
+      await CallApi.updatePost(newPost, this.hiddenId);
+      this.posts = await CallApi.getPosts();
+    },
     /*
     async createPost() {
       await CallApi.createPost(text);
@@ -120,7 +187,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style >
 #welcomeh1 {
   font-family: monospace;
   font-size: 5em;

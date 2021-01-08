@@ -50,9 +50,29 @@ class CallApi {
   }
 
   // Delete Post
-
   static deletePost(id) {
     return axios.delete(url + id);
+  }
+
+  //Update post
+  // eslint-disable-next-line no-unused-vars
+  static updatePost(newPost, id) {
+    return fetch(url + id, {
+      method: "PATCH",
+      body: JSON.stringify(newPost),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // message
+        console.log(data);
+        // CallApi.getPosts();
+      })
+      .catch((error) => {
+        console.log("Error: ", error);
+      });
   }
 }
 export default CallApi;
