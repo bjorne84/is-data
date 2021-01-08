@@ -8,7 +8,7 @@
     <!---ERROR in hide if no error is to display-->
     <p class="p-error" v-if="error">{{ error }}</p>
 
-    <div class="formWrapper">
+    <div v-if="showUpdateForm === 'defualt'" class="formWrapper">
       <h3 class="h3form">Skriv en rapport:</h3>
       <form @submit="addPost">
         <label for="lake">Sjö/vattendrag:</label><br />
@@ -36,46 +36,19 @@
         <button type="reset" class="btn del">Radera fält</button>
       </form>
     </div>
-    <div class="formWrapper">
-      <h3 class="h3form">Uppdatera</h3>
-      <form @submit="upDate">
-        <input
-          type="hidden"
-          id="hiddenId"
-          name="hiddenId"
-          value="new"
-          v-model="hiddenId"
-        />
-        <label for="lake">Sjö/vattendrag:</label><br />
-        <input
-          type="text"
-          id="lake"
-          v-model="lake"
-          class="formBorder"
-          name="lake"
-          placeholder="Vilken sjö var du på?"
-          required
-        /><br />
-        <label for="textIn">Beskrivning av läget:</label><br />
-        <textarea
-          id="textIn"
-          v-model="text"
-          name="textIn"
-          class="formBorder"
-          cols="30"
-          rows="8"
-          placeholder="exempelvis hur tjock isen var"
-          required
-        /><br />
-        <button type="submit" class="btn up">Posta!</button>
-        <button type="reset" class="btn del">Radera fält</button>
-      </form>
-    </div>
+    <FormUpdate
+      :error="error"
+      :lake="lake"
+      :text="text"
+      :hiddenId="hiddenId"
+      :showUpdateForm="showUpdateForm"
+      @reload-call="reloadNow"
+    />
     <section class="wrapper">
       <h1 class="wrapperh1">Inlägg:</h1>
       <article
         class="posts"
-        v-for="(post, index) in posts"
+        v-for="(post, index) in posts.slice().reverse()"
         v-bind:item="post"
         v-bind:index="index"
         v-bind:key="post._id"
@@ -92,6 +65,7 @@
           <button
             class="btn up"
             v-on:click="pressUpdate(post._id, post.lake, post.text)"
+            @click="changeForm()"
           >
             Updatera
           </button>
@@ -105,8 +79,14 @@
 // eslint-disable-next-line no-unused-vars
 import CallApi from "../CallApi";
 
+// eslint-disable-next-line no-unused-vars
+import FormUpdate from "./FormUpdate";
+
 export default {
   name: "IcePostComp",
+  components: {
+    FormUpdate,
+  },
   data() {
     return {
       posts: [],
@@ -114,8 +94,10 @@ export default {
       lake: "",
       text: "",
       hiddenId: "",
+      showUpdateForm: "defualt",
     };
   },
+
   async created() {
     try {
       // this is pointing to -> data() -> return -> posts[]
@@ -125,6 +107,12 @@ export default {
     }
   },
   methods: {
+    // when update-btn is pressed this method starts, and change wich form will dislpay
+    changeForm() {
+      this.showUpdateForm = "show";
+      console.log(this.showUpdateForm);
+    },
+
     // eslint-disable-next-line no-unused-vars
     async deletePost(id) {
       // this.text är bundet till inputfältet med v-model
@@ -138,8 +126,6 @@ export default {
         lake: this.lake,
         text: this.text,
       };
-      // send up to parent
-      //this.$emit("add-todo", newTodo);
 
       // clear
       this.lake = "";
@@ -159,29 +145,15 @@ export default {
       this.text = text;
       this.hiddenId = id;
     },
-    async upDate(e) {
-      e.preventDefault();
-      const newPost = {
-        lake: this.lake,
-        text: this.text,
-      };
 
-      // send up to parent
-      //this.$emit("add-todo", newTodo);
-
-      // clear
+    // A call from child-component has come, it´s asking for reload of the view
+    async reloadNow() {
+      this.posts = await CallApi.getPosts();
+      // clear form
       this.lake = "";
       this.text = "";
-
-      //Skapar fetch-anrop
-      await CallApi.updatePost(newPost, this.hiddenId);
-      this.posts = await CallApi.getPosts();
+      this.showUpdateForm = "defualt";
     },
-    /*
-    async createPost() {
-      await CallApi.createPost(text);
-      this.posts = await CallApi.getPosts();
-    }*/
   },
 };
 </script>
@@ -257,30 +229,5 @@ main {
 }
 .del {
   background-color: #b60b0b; /* Green */
-}
-
-/* Form*/
-.formWrapper {
-  text-align: left;
-  max-width: 800px;
-  padding: 2em;
-  margin-bottom: 2em;
-  margin: 0 auto;
-  background-color: rgb(235, 235, 233);
-  margin-bottom: 2em;
-  border-radius: 0.2em;
-}
-.formBorder {
-  margin-top: 4px;
-  border-radius: 0.2em;
-  border: 1px solid black;
-}
-
-#lake {
-  margin-bottom: 1em;
-}
-
-#textIn {
-  margin-bottom: 12px;
 }
 </style>
