@@ -1,4 +1,5 @@
-const url = "http://localhost:5000/api/posts/";
+const url = "api/posts/";
+//const url = "http://localhost:5000/api/posts/";
 // eslint-disable-next-line no-unused-vars
 class CallApi {
   // Get Posts
