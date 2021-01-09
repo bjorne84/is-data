@@ -62,6 +62,7 @@
           <button class="btn del" v-on:click="deletePost(post._id)">
             Radera
           </button>
+          <!---Update btn, sends data to form and add show the updateform / hide newpostform-->
           <button
             class="btn up"
             v-on:click="pressUpdate(post._id, post.lake, post.text)"
@@ -127,20 +128,19 @@ export default {
         text: this.text,
       };
 
-      // clear
+      // clear form
       this.lake = "";
       this.text = "";
 
       console.log(newPost);
-      //Skapar fetch-anrop
+      //call fetchApi to add post in db
       await CallApi.createPost(newPost);
       this.posts = await CallApi.getPosts();
-      console.log("hej");
     },
 
+    // Adds data to the form by id
     // eslint-disable-next-line no-unused-vars
     pressUpdate(id, lake, text) {
-      console.log(id + lake + text);
       this.lake = lake;
       this.text = text;
       this.hiddenId = id;

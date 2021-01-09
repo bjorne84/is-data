@@ -46,18 +46,10 @@ export default {
         text: this.text,
       };
 
-      // send up to parent
-      //this.$emit("add-todo", newTodo);
-
-      // clear
-      this.lake = "";
-      this.text = "";
-
-      //Skapar fetch-anrop
+      //Calls for fetchAPi to update post
       await CallApi.updatePost(newPost, this.hiddenId);
-      // send up to parent
+      // Send up to parent
       this.$emit("reload-call");
-      //this.posts = await CallApi.getPosts();
     },
   },
 };

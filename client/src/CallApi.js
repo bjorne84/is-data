@@ -1,23 +1,17 @@
-import axios from "axios";
 const url = "http://localhost:5000/api/posts/";
 // eslint-disable-next-line no-unused-vars
 class CallApi {
   // Get Posts
-  static helloHaj() {
-    console.log("halloHAJ");
-  }
-  // use static så man inte behöver instansera
+  // use static = no need to instantiate class
   static getPosts() {
     return new Promise((resolve, reject) => {
       fetch(url)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          console.log("inne i andre then");
           resolve(
-            data.map((arne) => ({
-              ...arne,
-              // createdAt: new Date(arne.createdAt),
+            data.map((arr) => ({
+              ...arr,
             }))
           );
         })
@@ -42,7 +36,6 @@ class CallApi {
       .then((data) => {
         // message
         console.log(data);
-        // CallApi.getPosts();
       })
       .catch((error) => {
         console.log("Error: ", error);
@@ -50,8 +43,23 @@ class CallApi {
   }
 
   // Delete Post
+
   static deletePost(id) {
-    return axios.delete(url + id);
+    return (
+      fetch(url + id, {
+        method: "DELETE",
+        //body: JSON.stringify(obj),
+      })
+        // Tar emot respons-data i JSON-format
+        .then((response) => response.json())
+        // Laddar om portfoliosidan
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log("Error: ", error);
+        })
+    );
   }
 
   //Update post

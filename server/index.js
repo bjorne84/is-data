@@ -17,7 +17,7 @@ mongoose
   .then(() => console.log("Connected to Mongo Database."))
   .catch((err) => console.log(err));
 
-//BodyParser Middleware, for use of JSON in body
+//BodyParser Middleware, for use of JSON in body and cors allow cross-url access
 app.use(cors());
 app.use(express.json());
 

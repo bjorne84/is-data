@@ -70,28 +70,6 @@ router.patch("/:id", getPost, async (req, res) => {
   }
 });
 
-// Update version 2
-/*
-router.patch("/:id", async (req, res) => {
-  // options new = true makes mangoose send back updated data and not old
-  let options = { new: true };
-  try {
-    const post = await Posts.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      options
-    );
-    if (!post) {
-      throw Error("Something went wrong while updating the post =( ");
-    } else {
-      // It worked ok, post is created
-      res.status(201).json(post);
-    }
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-*/
 // DELETE one post
 router.delete("/:id", getPost, async (req, res) => {
   try {
